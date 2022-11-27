@@ -53,7 +53,9 @@ export default {
     },
     methods:{
         SubmitForm(e){
-            console.log(this.password,this.username)
+            axios.post('/api/login/user',{
+                
+            })
         }
     }
 }
