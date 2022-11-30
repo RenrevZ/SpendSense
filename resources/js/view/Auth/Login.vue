@@ -28,11 +28,18 @@
 							<label for="password" class="absolute left-10 -top-3.5 text-gray-600 text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm">Password</label>
 						</div>
 						<div class="relative">
-							<button type="submit" class="bg-blue-500 text-white rounded-md px-2 py-1 w-72"><i class="fa-solid fa-key"></i> Submit</button>
+							<button type="submit" class="bg-blue-500 hover:scale-105 transition-all text-white rounded-md px-2 py-1 w-full"><i class="fa-solid fa-key"></i> Submit</button>
 						</div>
 
-                        <div class="relative flex justify-end">
-                            <span class="text-sm"> dont have account yet? <a href="/signup" class="text-sky-700">Login</a></span>
+                        <div class="relative flex justify-between align-bottom">
+
+                            <a href="#" class="bg-sky-500 hover:scale-105 transition-all text-white rounded-md px-1 py-1 w-32 text-center">
+                                   <small>Forgot Pass</small>
+                            </a>
+
+                            <a href="/signup" class="bg-sky-500 hover:scale-105 transition-all text-white rounded-md px-1 py-1 w-32 text-center">
+                                   <small>Signup</small>
+                            </a>
                         </div>
 					    </div>
                     </form>
@@ -54,7 +61,7 @@ export default {
     methods:{
         SubmitForm(e){
             axios.post('/api/login/user',{
-                
+
             })
         }
     }
