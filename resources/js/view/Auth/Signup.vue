@@ -114,7 +114,7 @@ export default {
     },
     methods:{
         SubmitForm(){
-            axios.post('/api/login/user',{
+            axios.post('/api/Signup/user',{
                 name:this.Fullname,
                 username:this.username,
                 password:this.password,

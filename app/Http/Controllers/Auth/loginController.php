@@ -5,25 +5,29 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-class loginController extends Controller
+
+class LoginController extends Controller
 {
-    public function store(Request $request){
+    use AuthenticatesUsers;
+
+    public function login(Request $request){
         $request->validate([
-            'name' => 'required',
-            'username' => 'required | regex:/^[\w-]*$/ | unique:users',
-            'email' => 'required | unique:users| email',
-            'password' => 'required | confirmed',
-            'password_confirmation' => 'required'
+            'username' => 'required',
+            'password' => 'required'
         ]);
 
+        $user = User::where(['username' => $request->username])->first();
 
-        User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        if(Hash::check($request->password,$user->password)){
+            dd(Auth::user());
+            return 'success';
+
+        }else{
+            return 'failed';
+        }
     }
 }
