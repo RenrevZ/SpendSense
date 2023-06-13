@@ -9,13 +9,12 @@ export default defineConfig({
             refresh: true,
         }),
         vue({
-            template:{
-                transformAssetsUrls:{
-                    based:null,
-                    includeAbsolute:false
-                }
-            }
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
         }),
     ],
-
 });

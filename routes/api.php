@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
@@ -22,4 +23,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/Signup/user',[SignupController::class,'store']);
 Route::post('/Login/user',[LoginController::class,'login']);
+Route::get('/getUser',[Controller::class,'getAuthenticatedUser']);
 

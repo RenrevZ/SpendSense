@@ -121,7 +121,7 @@ export default {
                 password_confirmation: this.password_confirmation,
                 email:this.email
             })
-            .then(response => {
+            .then((response) => {
                 this.message = 'You can now Login';
                 setTimeout(() =>{
                     this.$router.push({name : 'login'})

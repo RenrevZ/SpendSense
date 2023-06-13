@@ -7,10 +7,11 @@
 		<div class="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
 
             <SuccessMessage :message="message"/>
+            <ErrorMessage :errorMessage="Error" :hasError="hasError"/>
 
 			<div class="max-w-md mx-auto">
 				<div class="flex justify-center">
-					<h1 class="text-2xl font-semibold text-sky-600">Walle<span class="text-3xl text-sky-800">X</span>pend <i class="fa-solid fa-wallet text-4xl"></i></h1>
+					<h1 class="text-2xl font-semibold text-sky-600"><i class="fa-solid fa-dollar-sign"></i>pendSense</h1>
 				</div>
 				<div class="divide-y divide-gray-200">
                     <form action="/login/submit" @submit.prevent="SubmitForm">
@@ -38,9 +39,20 @@
                          <!-- ERROR MESSAGE FOR PASSWORD-->
                          <small class="text-rose-500 flex justify-center my-2" id="error_pass"></small>
 
-						<div class="relative">
-							<button type="submit" class="bg-blue-500 hover:scale-105 transition-all text-white rounded-md px-2 py-1 w-full"><i class="fa-solid fa-key"></i> Submit</button>
-						</div>
+                            <div v-if="isLoading">
+                                <button disabled type="button" class="w-full block text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 inline-flex items-center">
+                                    <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+                                    </svg>
+                                    Logging in...
+                                </button>
+                            </div>
+                            <div v-else>
+                                <div class="relative">
+                                    <button type="submit" class="bg-blue-500 hover:scale-105 transition-all text-white rounded-md px-2 py-1 w-full">Login</button>
+                                </div>
+                            </div>
 
                         <div class="relative flex justify-between align-bottom">
 
@@ -63,14 +75,18 @@
 
 <script>
 import SuccessMessage from '../components/Success-Alert.vue';
+import ErrorMessage from "../components/ErrorMessage.vue";
 
 export default {
-    components:{SuccessMessage},
+    components:{SuccessMessage,ErrorMessage},
     data(){
         return{
             username : '',
             password : '',
-            message  : ''
+            message  : '',
+            Error: [],
+            hasError: false,
+            isLoading:false
         }
     },
     methods:{
@@ -80,11 +96,13 @@ export default {
                 password : this.password
             })
             .then(response => {
+                this.isLoading = true
                 if(response.data == 'success'){
                     this.message = 'Thank you for Signing in';
 
                     setTimeout(() =>{
-                    this.$router.push({name : 'welcome'})
+                    this.$router.push({name : 'Dashoard'})
+                        this.isLoading = false
                     },3000)
                 }else{
 
@@ -100,9 +118,12 @@ export default {
                     }
 
                     ErrorMessage('password','error_pass','Error User credentials is not valid')
+                    this.isLoading = false
                 }
+
             })
             .catch(err => {
+                this.isLoading = true
                 function ErrorMessage(input,error,errordata){
                         error = document.getElementById(error);
                         input = document.getElementById(input);
@@ -120,13 +141,25 @@ export default {
                         }
                     }
 
+                    if(err.response.data.message){
+                        this.hasError = true
+                        this.Error.push(err.response.data.message)
+                        setTimeout(() => {
+                            this.hasError = false
+                            this.Error = ['']
+                        },4000)
 
-                    checkifTrue(err.response.data.errors.password,
+                        this.isLoading = false
+                    }
+
+                    checkifTrue(err.response.data.errors,
                                 ErrorMessage('password','error_pass',err.response.data.errors.password[0]))
 
-                    checkifTrue(err.response.data.errors.username,
-                                ErrorMessage('username','error_username',err.response.data.errors.username[0]))
+                    checkifTrue(err.response.data.message,
+                                ErrorMessage('password','error_pass',err.response.data.message))
 
+                    checkifTrue(err.response.data.errors,
+                                ErrorMessage('username','error_username',err.response.data.errors.username[0]))
             })
         }
     }
