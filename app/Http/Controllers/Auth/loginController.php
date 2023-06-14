@@ -48,18 +48,21 @@ class LoginController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::where(['username' => $request->username])->first();
+        $user = User::where('username',$request->username)->first();
 
         if($user){
             if(Hash::check($request->password,$user->password)){
-
-                return 'success';
-
-            }else{
-                return 'failed';
+                Auth::login($user);
+                return response('success',200);
             }
         }
 
         return response()->json(['message' => 'Invalid Credentials'],422);
+    }
+
+    public function logout(){
+        Auth::logout();
+
+        return response('success',200);
     }
 }

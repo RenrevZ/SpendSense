@@ -101,7 +101,7 @@ export default {
                     this.message = 'Thank you for Signing in';
 
                     setTimeout(() =>{
-                    this.$router.push({name : 'Dashoard'})
+                    this.$router.push({name : 'Dashboard'})
                         this.isLoading = false
                     },3000)
                 }else{

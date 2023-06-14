@@ -26,6 +26,11 @@ const router = createRouter({
             name:'CashRegistry',
             component: () => import('../view/Setup/CashRegistry.vue')
         },
+        {
+            path:'/CashRegistryForm',
+            name:'CashRegistryForm',
+            component: () => import('../view/components/CashRegistryForm.vue')
+        },
     ]
 });
 
