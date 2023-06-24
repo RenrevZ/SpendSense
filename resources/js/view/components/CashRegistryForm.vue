@@ -42,6 +42,8 @@
 
 <script>
     import ErrorMessage from "./ErrorMessage.vue";
+    import {get,post} from '../../Api/api.js'
+
     export default {
         components: {ErrorMessage},
         data(){
@@ -50,7 +52,8 @@
                 cashDescription:'',
                 amount:'',
                 ErrorMessage: [],
-                hasError:false
+                hasError:false,
+                user:''
             }
         },
         mounted() {
@@ -58,13 +61,8 @@
         },
         methods: {
             fetchData(){
-                axios.get("/api/Cashtype/index",{
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    })
+                get("/Cashtype/index")
                      .then(response => {
-                         console.log(response)
                          this.cashTypeID = response.data.count
                      })
                     .catch(error => {
@@ -73,20 +71,21 @@
                     })
             },
             submitForm(){
-                axios.post("/api/Cashtype/store",{
-                        cashTypeID:this.cashTypeID,
-                        cashDescription:this.cashDescription,
-                        amount:this.amount
-                    })
+                const formData = {
+                    cashTypeID:this.cashTypeID,
+                    cashDescription:this.cashDescription,
+                    amount:this.amount
+                }
+
+                post("Cashtype/store",formData)
                     .then(response => {
-                        console.log('response');
                         console.log(response)
                     })
                     .catch(error => {
                         this.hasError = true
                         this.ErrorMessage.push(error.response.data.message)
                     });
-            },
+            }
         }
     }
 </script>

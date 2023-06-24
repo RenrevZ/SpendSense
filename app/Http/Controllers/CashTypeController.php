@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\CashType;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,8 +46,11 @@ class CashTypeController extends Controller
 
             $db = new CashType();
 
-            $db->store($request);
-            $db->storeRemittance($request);
+            DB::transaction(function() use($db,$request){
+                $db->store($request);
+                $db->storeRemittance($request);
+            });
+
         }catch (\Exception $e){
             Log::info($e);
             return response()->json(['message' => 'Error saving into database please notify the developer on error'],422);

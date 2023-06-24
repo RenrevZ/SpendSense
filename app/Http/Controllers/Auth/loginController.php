@@ -10,6 +10,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+
 class LoginController extends Controller
 {
     /*
@@ -30,7 +31,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+//    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -42,22 +43,21 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+
     public function login(Request $request){
         $request->validate([
             'username' => 'required',
             'password' => 'required'
         ]);
 
-        $user = User::where('username',$request->username)->first();
+        $credentials = $request->only('username', 'password');
 
-        if($user){
-            if(Hash::check($request->password,$user->password)){
-                Auth::login($user);
-                return response('success',200);
-            }
+        if (Auth::attempt($credentials)) {
+            $token = Auth::user()->createToken('Resttoken')->plainTextToken;
+            return response()->json(['token' => $token], 200);
         }
 
-        return response()->json(['message' => 'Invalid Credentials'],422);
+        return response()->json(['message' => 'Invalid Credentials'],401);
     }
 
     public function logout(){

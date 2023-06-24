@@ -17,6 +17,7 @@ class CashType extends Model
     }
 
     public function store($request){
+
         return self::create([
             'CASH_TYPE_ID' => $request->cashTypeID,
             'DESCRIPTION' => $request->cashDescription
@@ -29,7 +30,7 @@ class CashType extends Model
         return CashRemittance::create([
             'CASH_ID' => $dbCount,
             'USER_ID' => auth()->user()->id,
-            'CASH_TYPE_ID' => $request->CASH_TYPE_ID,
+            'CASH_TYPE_ID' => $request->cashTypeID,
             'AMOUNT' => $request->amount
         ]);
     }

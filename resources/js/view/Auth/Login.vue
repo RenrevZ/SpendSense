@@ -76,6 +76,8 @@
 <script>
 import SuccessMessage from '../components/Success-Alert.vue';
 import ErrorMessage from "../components/ErrorMessage.vue";
+import {login} from "../../Api/api.js"
+import Cookies from 'js-cookie';
 
 export default {
     components:{SuccessMessage,ErrorMessage},
@@ -91,17 +93,20 @@ export default {
     },
     methods:{
         SubmitForm(e){
-            axios.post('/api/Login/user',{
+            const creds = {
                 username : this.username,
                 password : this.password
-            })
-            .then(response => {
+            }
+
+            login(creds)
+              .then(response => {
                 this.isLoading = true
-                if(response.data == 'success'){
+                if(response){
                     this.message = 'Thank you for Signing in';
 
+                    Cookies.set('token', response.data.token);
                     setTimeout(() =>{
-                    this.$router.push({name : 'Dashboard'})
+                        this.$router.push({name : 'Dashboard'})
                         this.isLoading = false
                     },3000)
                 }else{
@@ -120,7 +125,7 @@ export default {
                     ErrorMessage('password','error_pass','Error User credentials is not valid')
                     this.isLoading = false
                 }
-
+                console.log(response)
             })
             .catch(err => {
                 this.isLoading = true

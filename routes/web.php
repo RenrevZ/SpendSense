@@ -2,6 +2,7 @@
 
 use App\Mail\UserCreated;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+//Route::post('/Login/user',[LoginController::class,'login']);
 
 Route::get('/{any}', function () {
     return view('welcome');
