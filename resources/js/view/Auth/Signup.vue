@@ -98,8 +98,9 @@
 
 <script>
  import SuccessMessage from '../components/Success-Alert.vue';
+ import {post} from "../../Api/api";
 
-export default {
+ export default {
     components:{SuccessMessage},
 
     data(){
@@ -114,13 +115,16 @@ export default {
     },
     methods:{
         SubmitForm(){
-            axios.post('/api/Signup/user',{
+
+            const formData = {
                 name:this.Fullname,
                 username:this.username,
                 password:this.password,
                 password_confirmation: this.password_confirmation,
                 email:this.email
-            })
+            }
+
+            post('Signup/user',formData)
             .then((response) => {
                 this.message = 'You can now Login';
                 setTimeout(() =>{

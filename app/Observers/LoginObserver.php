@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Mail\UserCreated;
+use App\Models\CashRemittance;
+use App\Models\CashType;
 use App\Models\User;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Log;

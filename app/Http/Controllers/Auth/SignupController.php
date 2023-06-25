@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Helper;
+
 
 class SignupController extends Controller
 {
@@ -18,8 +20,8 @@ class SignupController extends Controller
             'password_confirmation' => 'required'
         ]);
 
-
         User::create([
+            'USER_ID' => Helper\modelCounter('users'),
             'name' => $request->name,
             'username' => $request->username,
             'email' => $request->email,

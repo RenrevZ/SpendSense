@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserLoggedIn;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,8 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $token = Auth::user()->createToken('Resttoken')->plainTextToken;
+
+            event(new UserLoggedIn(Auth::user()));
             return response()->json(['token' => $token], 200);
         }
 

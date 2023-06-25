@@ -29,9 +29,29 @@ class CashType extends Model
 
         return CashRemittance::create([
             'CASH_ID' => $dbCount,
-            'USER_ID' => auth()->user()->id,
+            'USER_ID' => auth()->user()->USER_ID,
             'CASH_TYPE_ID' => $request->cashTypeID,
             'AMOUNT' => $request->amount
         ]);
+    }
+
+    public function getTypeAndRemittance(){
+        return CashType::with(['CashRemittance' => function ($query) {
+                            $query->where('USER_ID',auth()->user()->USER_ID);
+                        }])
+                        ->get();
+    }
+
+    public function showTypeAndRemittance($id){
+        return CashType::with(['CashRemittance' => function ($query) {
+                    $query->where('USER_ID',auth()->user()->USER_ID);
+                }])
+               ->where('CASH_TYPE_ID',$id)
+               ->first();
+    }
+
+
+    public function CashRemittance(){
+        return $this->hasOne(CashRemittance::class,'CASH_TYPE_ID','CASH_TYPE_ID');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\CashTypeController;
+use App\Http\Controllers\CashRegistryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth:sanctum']],function (){
-    //== AUTH ROUTE
-    Route::post('/Signup/user',[SignupController::class,'store']);
+    //=== LOGOUT/GET USER
     Route::get('/Logout/user',[LoginController::class,'logout']);
     Route::get('/getUser',[Controller::class,'getAuthenticatedUser']);
 
@@ -33,8 +33,17 @@ Route::group(['middleware' => ['auth:sanctum']],function (){
         Route::get('/index',[CashTypeController::class,'index']);
         Route::post('/store',[CashTypeController::class,'store']);
     });
+
+    //=== CASH REGISTRY ROUTE
+    Route::prefix('CashRegistry')->group(function () {
+        Route::get('/index',[CashRegistryController::class,'index']);
+        Route::get('/show/{id}',[CashRegistryController::class,'show']);
+        Route::put('/update',[CashRegistryController::class,'update']);
+    });
 });
 
+//== AUTH ROUTE
 Route::post('/Login/user',[LoginController::class,'login']);
+Route::post('/Signup/user',[SignupController::class,'store']);
 
 

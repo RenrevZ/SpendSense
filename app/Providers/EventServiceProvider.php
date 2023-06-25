@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\UserLoggedIn;
+use App\Listeners\UserLoggedInListener;
 use App\Models\User;
 use App\Observers\LoginObserver;
 use Illuminate\Support\Facades\Event;
@@ -20,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        UserLoggedIn::class => [
+            UserLoggedInListener::class
+        ]
     ];
 
     /**

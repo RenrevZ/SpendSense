@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('summary_per_cash_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('CASH_TYPE_ID');
-            $table->unsignedBigInteger('USER_ID');
+            $table->string('CASH_TYPE_ID');
+            $table->string('USER_ID');
             $table->string('AMOUNT');
             $table->timestamps();
 
             // FOREIGN KEY
             $table->foreign('CASH_TYPE_ID')->references('CASH_TYPE_ID')->on('cash_types');
-            $table->foreign('USER_ID')->references('id')->on('users');
+            $table->foreign('USER_ID')->references('USER_ID')->on('users');
         });
     }
 

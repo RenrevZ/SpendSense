@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('cash_types', function (Blueprint $table) {
-            $table->id('CASH_TYPE_ID');
+            $table->string('CASH_TYPE_ID')->primary();
             $table->string('DESCRIPTION');
             $table->timestamp('DATE_CREATED');
             $table->timestamps();

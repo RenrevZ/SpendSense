@@ -9,7 +9,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use((config) => {
     const token = Cookies.get('token');
-    console.log('token:',token)
+
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
         config.headers.Accept = 'application/json';
@@ -17,8 +17,12 @@ apiClient.interceptors.request.use((config) => {
     return config;
 });
 
-export const login = (credentials) => apiClient.post('/Login/user', credentials)
+const login = (credentials) => apiClient.post('/Login/user', credentials)
 
-export const get = (url) => apiClient.get(url)
+const get = (url) => apiClient.get(url)
 
-export const post =(url,items) => apiClient.post(url,items)
+const post =(url,items) => apiClient.post(url,items)
+
+const put =(url,items) => apiClient.put(url,items)
+
+export {login,get,post,put}

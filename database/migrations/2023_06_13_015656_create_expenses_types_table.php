@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('expenses_types', function (Blueprint $table) {
-            $table->id('EXPENSE_ID');
+            $table->string('EXPENSE_ID')->primary();
             $table->string('DESCRIPTION');
             $table->timestamp('DATE_CREATED');
             $table->timestamps();

@@ -9,7 +9,7 @@
             </span>
 
             <form class="space-y-6" @submit.prevent="submitForm">
-                <h5 class="text-xl font-medium text-gray-900 dark:text-white">Add A Cash Type</h5>
+                <h5 class="text-xl font-medium text-gray-900 dark:text-white">Update {{cashDescription}} Balance</h5>
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cash Type ID</label>
                     <input type="text"
@@ -24,6 +24,7 @@
                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                placeholder="Cash Description...."
                                v-model="cashDescription"
+                               readonly
                                style="resize: none;"></textarea>
                 </div>
                 <div>
@@ -35,7 +36,7 @@
                 </div>
                 <button type="submit"
                         class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Submit
+                    Submit
                 </button>
             </form>
         </div>
@@ -44,55 +45,55 @@
 </template>
 
 <script>
-    import ErrorMessage from "./ErrorMessage.vue";
-    import {get,post} from '../../Api/api.js'
-    import SuccessMessage from './SuccessMessage.vue'
+    import ErrorMessage from "../components/ErrorMessage.vue";
+    import {get,put} from '../../Api/api.js'
+    import SuccessMessage from "../components/SuccessMessage.vue";
 
     export default {
         components: {ErrorMessage,SuccessMessage},
         data(){
-            return {
-                cashTypeID: '',
-                cashDescription:'',
-                amount:'',
+            return{
                 ErrorMessage: [],
-                successMessage:'',
                 hasError:false,
-                user:''
+                successMessage:'',
+                cashTypeID:'',
+                cashDescription:'',
+                amount:''
             }
         },
-        mounted() {
-            this.fetchData();
+        created() {
+            this.fetchCashtype()
         },
-        methods: {
-            fetchData(){
-                get("/Cashtype/index")
-                     .then(response => {
-                         this.cashTypeID = response.data.count
-                     })
-                    .catch(error => {
-                        console.log(error)
-                        this.ErrorMessage = error.message
-                    })
+        methods:{
+            fetchCashtype() {
+                const id = this.$route.params.id
+                get(`/CashRegistry/show/${id}`)
+                 .then(response => {
+                     this.cashTypeID = response.data.data.CASH_TYPE_ID
+                     this.cashDescription = response.data.data.DESCRIPTION
+                     this.amount = response.data.data.cash_remittance.AMOUNT
+                     console.log(response.data.data)
+                 })
+                 .catch(error => console.log(error))
             },
             submitForm(){
                 const formData = {
-                    cashTypeID:this.cashTypeID,
-                    cashDescription:this.cashDescription,
+                    cashTypeID: this.cashTypeID,
+                    cashDescription: this.cashDescription,
                     amount:this.amount
                 }
 
-                post("Cashtype/store",formData)
-                    .then(response => {
-                        this.successMessage = 'New Cash Type Has been Added'
-                        if(response){
-                            setTimeout(() => this.$router.push({name : 'CashRegistry'}),2000)
-                        }
-                    })
-                    .catch(error => {
-                        this.hasError = true
-                        this.ErrorMessage.push(error.response.data.message)
-                    });
+                put('/CashRegistry/update',formData)
+                  .then(response => {
+                      this.successMessage = response.data.message
+
+                      setTimeout(() => this.$router.push({name : 'CashRegistry'}),2000)
+
+                  })
+                  .catch(error => {
+                      this.hasError = true
+                      this.ErrorMessage.push(error.response.data.message)
+                  })
             }
         }
     }

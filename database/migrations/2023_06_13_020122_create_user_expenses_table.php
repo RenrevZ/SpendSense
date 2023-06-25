@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user_expenses', function (Blueprint $table) {
-            $table->id('EXPENSE_TYPE');
-            $table->unsignedBigInteger('CASH_TYPE_ID');
-            $table->unsignedBigInteger('EXPENSE_ID');
-            $table->unsignedBigInteger('USER_ID');
+            $table->string('EXPENSE_TYPE')->primary();
+            $table->string('CASH_TYPE_ID');
+            $table->string('EXPENSE_ID');
+            $table->string('USER_ID');
             $table->string('AMOUNT');
             $table->timestamp('DATE_CREATED');
             $table->timestamps();
@@ -25,7 +25,7 @@ return new class extends Migration
             // FOREIGN KEY
             $table->foreign('CASH_TYPE_ID')->references('CASH_TYPE_ID')->on('cash_types');
             $table->foreign('EXPENSE_ID')->references('EXPENSE_ID')->on('expenses_types');
-            $table->foreign('USER_ID')->references('id')->on('users');
+            $table->foreign('USER_ID')->references('USER_ID')->on('users');
         });
     }
 

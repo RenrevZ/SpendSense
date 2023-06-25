@@ -15,14 +15,14 @@ return new class extends Migration
     {
         Schema::create('summary_per_expense_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('EXPENSE_ID');
-            $table->unsignedBigInteger('USER_ID');
+            $table->string('EXPENSE_ID');
+            $table->string('USER_ID');
             $table->string('AMOUNT');
             $table->timestamps();
 
             // FOREIGN KEY
             $table->foreign('EXPENSE_ID')->references('EXPENSE_ID')->on('expenses_types');
-            $table->foreign('USER_ID')->references('id')->on('users');
+            $table->foreign('USER_ID')->references('USER_ID')->on('users');
         });
     }
 

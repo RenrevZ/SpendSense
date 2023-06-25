@@ -27,7 +27,7 @@ class UsersController extends Controller
             ]);
         }catch(\Exception $e){
             Log::info($e);
-            return response()->json(['message' => 'Error Could not create a user please notify the developer immediately']);
+            return response()->json(['message' => 'Error Could not create a user please notify the developer immediately'],400);
         }
 
     }
