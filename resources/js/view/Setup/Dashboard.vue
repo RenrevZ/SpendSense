@@ -8,13 +8,13 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-2 mb-10">
+        <div class="grid grid-cols-3 gap-2 mb-10">
             <div class="max-w-xl p-6 bg-white border border-gray-200 rounded-lg shadow-lg shadow-cyan-500/50 dark:bg-gray-800 dark:border-gray-700">
                 <GoogleChart
                     :type="'LineChart'"
                     :chartData="chartData"
                     :chartOptions="chartOptions"
-                    :chartWidth="'100%'"
+                    :chartWidth="'80%'"
                     :chartHeight="'3000px'"
                 />
             </div>
@@ -52,6 +52,18 @@
                         <h1 class="text-slate-500 font-bold text-sky-500">10000</h1>
                     </div>
                 </div>
+            </div>
+
+            <div class="flex flex-col justify-center items-center">
+                <button @click="ishidden = !ishidden" class=" focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900">
+                    + Add Expenses
+                </button>
+                <button class="flex focus:outline-none text-white bg-teal-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Import Expenses
+                </button>
             </div>
         </div>
 
@@ -103,28 +115,57 @@
             </table>
         </div>
 
+        <modal :ishidden="ishidden">
+            <form>
+                <div class="mb-6">
+                    <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expense Type</label>
+                    <select name="" id="" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Food</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Expended Type</label>
+                    <select  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="">Cash</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+                    <input type="number"  class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required>
+                </div>
+
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Expenses</button>
+            </form>
+        </modal>
     </div>
 </template>
 
 <script>
     import mainLayout from "./mainLayout.vue";
     import GoogleChart  from "../components/Chart.vue";
+    import modal from "../components/modal.vue";
     export default {
-        components: {mainLayout,GoogleChart},
+        components: {mainLayout,GoogleChart,modal},
         data() {
             return {
                 chartData: [
-                    ['Year', 'Sales', 'Expenses'],
-                    ['2004',  1000,      400],
-                    ['2005',  1170,      460],
-                    ['2006',  660,       1120],
-                    ['2007',  1030,      540]
+                    ['Month', 'Income', 'Expenses'],
+                    ['June',  1000,      400],
+                    ['July',  1170,      460],
+                    ['August',  660,       1120],
+                    ['September',  1030,      540]
                 ],
                 chartOptions: {
-                    title: 'My Daily Activities',
+                    title: 'Income Vs Expenses',
                     curveType: 'function',
-                    legend: { position: 'bottom' }
+                    legend: { position: 'bottom' },
+                    animation: {
+                        startup: true, // Enable animation on initial load
+                        duration: 2000, // Animation duration in milliseconds
+                        easing: 'out' // Animation easing function
+                    }
                 },
+                ishidden:true
             };
         },
     }

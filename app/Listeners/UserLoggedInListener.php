@@ -32,7 +32,7 @@ class UserLoggedInListener
         $remit = CashRemittance::where('USER_ID',$event->user->USER_ID)->first();
         $cashtype = CashType::count();
 
-        if($cashtype <> 1){
+        if($cashtype == 0){
 
             CashType::create([
                 'CASH_TYPE_ID' => Helper\modelCounter('cash_types'),
