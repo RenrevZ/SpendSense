@@ -18,7 +18,7 @@
         </div>
 
         <div class="grid grid-cols-4 gap-2 w-full">
-            <div v-for="cash in cashtypeAndRemittance" :key="cash">
+            <div v-for="cash in cashtypeAndRemittance" :key="cash.cash_remittance.CASH_TYPE_ID">
                 <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-md shadow-yellow-300/50 dark:bg-gray-800 dark:border-gray-700 mb-3">
                     <div class="flex flex-col justify-center items-center">
                         <div class="flex justify-start items-center w-full">

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\CashTypeController;
 use App\Http\Controllers\CashRegistryController;
+use App\Http\Controllers\ExpenseTypeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,15 @@ Route::group(['middleware' => ['auth:sanctum']],function (){
         Route::get('/index',[CashRegistryController::class,'index']);
         Route::get('/show/{id}',[CashRegistryController::class,'show']);
         Route::put('/update',[CashRegistryController::class,'update']);
+    });
+
+    //=== EXPENSE TYPE ROUTE
+    Route::prefix('ExpenseType')->group(function () {
+        Route::get('/index',[ExpenseTypeController::class,'index']);
+        Route::post('/store',[ExpenseTypeController::class,'store']);
+        Route::get('/edit/{id}',[ExpenseTypeController::class,'edit']);
+        Route::put('/update',[ExpenseTypeController::class,'update']);
+        Route::delete('/destroy/{id}',[ExpenseTypeController::class,'destroy']);
     });
 });
 

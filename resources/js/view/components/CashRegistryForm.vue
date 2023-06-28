@@ -4,9 +4,8 @@
         <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
             <!--  ERROR MESSAGE  -->
             <ErrorMessage :errorMessage="ErrorMessage" :hasError="hasError"/>
-            <span v-if="successMessage">
-                <SuccessMessage :message="successMessage"/>
-            </span>
+            <SuccessMessage :message="successMessage"/>
+
 
             <form class="space-y-6" @submit.prevent="submitForm">
                 <h5 class="text-xl font-medium text-gray-900 dark:text-white">Add A Cash Type</h5>
@@ -91,7 +90,11 @@
                     })
                     .catch(error => {
                         this.hasError = true
-                        this.ErrorMessage.push(error.response.data.message)
+                        const errorMessages = Object.values(error.response.data.message);
+                        console.log(errorMessages.length)
+                        errorMessages.forEach(errorMessage => {
+                            this.ErrorMessage.push(errorMessage);
+                        });
                     });
             }
         }

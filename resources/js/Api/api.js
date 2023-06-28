@@ -25,4 +25,6 @@ const post =(url,items) => apiClient.post(url,items)
 
 const put =(url,items) => apiClient.put(url,items)
 
-export {login,get,post,put}
+const deleteItem = (url) => apiClient.delete(url)
+
+export {login,get,post,put,deleteItem}

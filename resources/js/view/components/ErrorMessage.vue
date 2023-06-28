@@ -8,7 +8,7 @@
                       'dark:bg-gray-800',
                        'dark:text-red-400',
                        hasError ? 'block' : 'hidden']" role="alert">
-       <div v-if="hasError">
+       <div v-if="errorMessage">
            <ul v-for="error in  errorMessage" :key="error">
                <li>{{error}}</li>
            </ul>
