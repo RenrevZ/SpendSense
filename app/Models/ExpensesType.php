@@ -17,7 +17,7 @@ class ExpensesType extends Model
     ];
 
     public function getall(){
-        return self::all();
+        return $this->get();
     }
 
     public function store($request){
@@ -38,5 +38,14 @@ class ExpensesType extends Model
 
     public function deleteItem($id){
         return self::where('EXPENSE_ID',$id)->delete();
+    }
+
+
+    public function UserExpenses(){
+        return $this->hasMany(UserExpenses::class,'EXPENSE_ID','EXPENSE_ID');
+    }
+
+    public function SummaryPerExpenseType(){
+        return $this->hasMany(SummaryPerExpenseType::class,'EXPENSE_ID','EXPENSE_ID');
     }
 }

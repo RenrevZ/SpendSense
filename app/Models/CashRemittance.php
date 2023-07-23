@@ -18,4 +18,22 @@ class CashRemittance extends Model
                 ])
                 ->update(['AMOUNT' => $request->amount]);
     }
+
+    public function findOne($request){
+        return $this->where([
+            'USER_ID' => $request->USER_ID,
+            'CASH_TYPE_ID' => $request->CASH_TYPE_ID,
+        ])->first();
+    }
+
+    public function deductUserExpense($request){
+        $cashAmount = $this->findOne($request);
+
+        return $this->where([
+            'USER_ID' => $request->USER_ID,
+            'CASH_TYPE_ID' => $request->CASH_TYPE_ID,
+        ])->update([
+            'AMOUNT' => floatval($cashAmount->AMOUNT) - $request->AMOUNT
+        ]);
+    }
 }

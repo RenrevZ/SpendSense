@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ExpensesType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
@@ -8,6 +9,9 @@ use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\CashTypeController;
 use App\Http\Controllers\CashRegistryController;
 use App\Http\Controllers\ExpenseTypeController;
+use \App\Http\Controllers\UserExperienceController;
+use \App\Models\UserExpenses;
+use \App\Models\SummaryPerExpenseType;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +53,28 @@ Route::group(['middleware' => ['auth:sanctum']],function (){
         Route::get('/edit/{id}',[ExpenseTypeController::class,'edit']);
         Route::put('/update',[ExpenseTypeController::class,'update']);
         Route::delete('/destroy/{id}',[ExpenseTypeController::class,'destroy']);
+        Route::get('/getExpenseType',function (){  return (new ExpensesType)->getall(); });
     });
+
+    //=== USER EXPENSE ROUTE
+    Route::prefix('UserExpense')->group(function () {
+        Route::get('/getCurrentUserExpenses',function () {
+            return (new UserExpenses)->fetchCurrentUserExpenses(auth()->user());
+        });
+
+        Route::post('/store',[UserExperienceController::class,'store']);
+    });
+
+    //=== GET SUMMARY OF ITEMS
+    Route::prefix('Summary')->group(function () {
+        Route::get('/ExpenseType',function () {
+            return (new SummaryPerExpenseType)->getSummaryOfMonth();
+        });
+
+        Route::post('/store',[UserExperienceController::class,'store']);
+    });
+
+
 });
 
 //== AUTH ROUTE
