@@ -8,12 +8,12 @@
             </div>
 
             <div>
-                <router-link :to="{name:'CashRegistryForm'}" class="flex w-full bg-amber-300 text-white p-2 rounded shadow">
+                <button @click="ishidden = !ishidden" class="flex w-full bg-amber-300 text-white p-2 rounded shadow">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-white">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>
                     Add Cash Type
-                </router-link>
+                </button>
             </div>
         </div>
 
@@ -40,27 +40,108 @@
         </div>
     </div>
 
+    <!-- MODAL   -->
+    <modal :ishidden="ishidden">
+        <!--  ERROR MESSAGE  -->
+        <ErrorMessage :errorMessage="message.ErrorMessage" :hasError="message.hasError"/>
+        <SuccessMessage :message="message.successMessage"/>
+
+
+        <form class="space-y-6" @submit.prevent="submitForm">
+            <h5 class="text-xl font-medium text-gray-900 dark:text-white">Add A Cash Type</h5>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cash Type ID</label>
+                <input type="text"
+                       v-model="form.cashTypeID"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                       required
+                       readonly>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cash Description</label>
+                <textarea  rows="4"
+                           class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Cash Description...."
+                           v-model="form.cashDescription"
+                           style="resize: none;"></textarea>
+            </div>
+            <div>
+                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+                <input type="number"
+                       v-model="form.amount"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                       required>
+            </div>
+            <button type="submit"
+                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                Submit
+            </button>
+        </form>
+    </modal>
+
 </template>
 
 <script>
     import mainLayout from "../Setup/mainLayout.vue";
-    import {get} from "../../Api/api.js";
+    import {get,post} from "../../Api/api.js";
+    import modal from "../components/modal.vue";
 
     export default {
-        components: {mainLayout},
+        components: {mainLayout,modal},
         data(){
             return {
-                cashtypeAndRemittance: ''
+                cashtypeAndRemittance: '',
+                ishidden:true,
+                message: {
+                    ErrorMessage:'',
+                    hasError:false,
+                    successMessage:''
+                },
+                form:{
+                    cashTypeID: '',
+                    cashDescription:'',
+                    amount:'',
+                    user:''
+                }
             }
         },
         mounted() {
             this.fetchCashtype()
+            this.fetchData();
         },
         methods:{
             fetchCashtype(){
                 get('/CashRegistry/index')
                   .then(response => this.cashtypeAndRemittance =  response.data.cash)
                   .catch(error => console.log(error))
+            },
+            fetchData(){
+                get("/Cashtype/index")
+                    .then(response => {
+                        this.form.cashTypeID = response.data.count
+                    })
+                    .catch(error => {
+                        this.message.ErrorMessage = error.message
+                    })
+            },
+
+            submitForm(){
+                post("Cashtype/store",this.form)
+                    .then(response => {
+                        this.message.successMessage = 'New Cash Type Has been Added'
+                        this.ishidden = true
+                        if(response){
+                            setTimeout(() => this.$router.push({name : 'CashRegistry'}),2000)
+                        }
+                    })
+                    .catch(error => {
+                        this.message.hasError = true
+                        const errorMessages = Object.values(error.response.data.message);
+
+                        errorMessages.forEach(errorMessage => {
+                            this.message.ErrorMessage.push(errorMessage);
+                        });
+                    });
             }
         }
     }

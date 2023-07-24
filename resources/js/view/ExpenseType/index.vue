@@ -43,11 +43,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="expense in expenseType" :key="expense.EXPENSE_ID">
-                        <td>{{expense.EXPENSE_ID}}</td>
-                        <td>{{expense.DESCRIPTION}}</td>
-                        <td>{{expense.DATE_CREATED}}</td>
-                        <td>
+                    <tr v-for="expense in expenseType" :key="expense.EXPENSE_ID" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="px-6 py-2">{{expense.EXPENSE_ID}}</td>
+                        <td class="px-6 py-2">{{expense.DESCRIPTION}}</td>
+                        <td class="px-6 py-2">{{expense.DATE_CREATED}}</td>
+                        <td class="px-6 py-2">
                             <button @click="editForm(expense.EXPENSE_ID)"
                                     class="text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-3 py-1 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Edit

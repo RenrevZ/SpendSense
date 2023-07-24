@@ -20,13 +20,21 @@
             </div>
 
             <div class="max-w-xl p-2 bg-white border border-gray-200 rounded-lg shadow-lg shadow-cyan-500/50 dark:bg-gray-800 dark:border-gray-700">
-                <GoogleChart
-                    :type="'PieChart'"
-                    :chartData="pieChart.pieChartData"
-                    :chartOptions="pieChart.pieChartOptions"
-                    :chartWidth="'80%'"
-                    :chartHeight="'3000px'"
-                />
+                <span v-if="pieChart.isLoading">
+                     <div class="animate-pulse flex justify-center items-center h-full">
+                        <div class="rounded-full bg-yellow-200 h-32 w-32"></div>
+                    </div>
+                </span>
+
+                <span v-else>
+                     <GoogleChart
+                         :type="'PieChart'"
+                         :chartData="pieChart.pieChartData"
+                         :chartOptions="pieChart.pieChartOptions"
+                         :chartWidth="'80%'"
+                         :chartHeight="'3000px'"
+                     />
+                </span>
             </div>
 
             <div class="flex md:flex-col justify-center items-center">
@@ -81,10 +89,11 @@
             <ErrorMessage :errorMessage="ErrorMessage" :hasError="hasError"/>
         </div>
 
+
+
         <div class="justify-between items-center w-fulll">
             <h1 class="text-1xl font-bold text-slate-500">Transaction Overview</h1>
         </div>
-
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -129,7 +138,6 @@
             </table>
         </div>
 
-        {{pieChart.pieChartData}}
         <modal :ishidden="ishidden">
             <form @submit.prevent="addExpenses">
                 <div class="mb-6">
@@ -186,7 +194,7 @@
                     legend: { position: 'bottom' },
                     animation: {
                         startup: true, // Enable animation on initial load
-                        duration: 2000, // Animation duration in milliseconds
+                        duration: 1000, // Animation duration in milliseconds
                         easing: 'out' // Animation easing function
                     }
                 },
@@ -212,7 +220,8 @@
                             duration: 2000, // Animation duration in milliseconds
                             easing: 'out' // Animation easing function
                         }
-                    }
+                    },
+                    isLoading:false
                 }
             };
         },
@@ -221,7 +230,6 @@
             this.fetchExpenseType()
             this.fetchCurrentUserExpenses()
             this.fetchExpenseSummaryByExpenseType()
-            this.pushDataTopieChart()
         },
         methods:{
             fetchCashtype(){
@@ -269,23 +277,22 @@
                        this.ErrorMessage.push(error.response.data.message)
                    })
             },
-            fetchExpenseSummaryByExpenseType(){
+            fetchExpenseSummaryByExpenseType() {
+                this.pieChart.isLoading = true;
                 get('Summary/ExpenseType')
                     .then(response => {
-                        this.pieChart.pieChartData = [['DESCRIPTION', 'AMOUNT']];
-                        response.data.forEach(item => {
-                            this.pieChart.pieChartData.push([item.expenses_type.DESCRIPTION, item.AMOUNT]);
-                        });
+                        this.pieChart.pieChartData = [];
+                        this.pieChart.pieChartData.push(['DESCRIPTION', 'AMOUNT']);
 
-                        this.pushDataTopieChart();
+                        response.data.forEach(item => {
+                            this.pieChart.pieChartData.push([item.expenses_type.DESCRIPTION, parseInt(item.AMOUNT)]);
+                        });
                     })
                     .catch(error => {
-                        this.hasError = true
-                        this.ErrorMessage.push(error.response.data.message)
+                        this.hasError = true;
+                        this.ErrorMessage.push(error.response.data.message);
                     })
-            },
-            pushDataTopieChart(){
-                console.log(`pie chart data: ${this.pieChart.pieChartData}`)
+                    .finally(() => this.pieChart.isLoading = false)
             }
         }
     }
