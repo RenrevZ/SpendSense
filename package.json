@@ -21,7 +21,9 @@
         "@vitejs/plugin-vue": "^3.2.0",
         "js-cookie": "^3.0.5",
         "vue": "^3.2.36",
+        "vue-apexcharts": "^1.6.2",
         "vue-google-charts": "^1.1.0",
-        "vue-router": "^4.0.13"
+        "vue-router": "^4.0.13",
+        "vue3-apexcharts": "^1.4.4"
     }
 }
