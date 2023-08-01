@@ -12,6 +12,7 @@ use App\Http\Controllers\ExpenseTypeController;
 use \App\Http\Controllers\UserExperienceController;
 use \App\Models\UserExpenses;
 use \App\Models\SummaryPerExpenseType;
+use \App\Models\SummaryPerCashType;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,10 @@ Route::group(['middleware' => ['auth:sanctum']],function (){
             return (new UserExpenses)->fetchCurrentUserExpenses(auth()->user());
         });
 
+        Route::get('/getCurrentUserExpensesMonthly',function(){
+            return (new UserExpenses)->fetchCurrentUserMonthlyExpenses(auth()->user()->USER_ID);
+        });
+
         Route::post('/store',[UserExperienceController::class,'store']);
     });
 
@@ -71,10 +76,12 @@ Route::group(['middleware' => ['auth:sanctum']],function (){
             return (new SummaryPerExpenseType)->getSummaryOfMonth();
         });
 
+        Route::get('/UserExpenses',function (){
+            return (new SummaryPerCashType)->getCurrentUserExpenses(auth()->user()->USER_ID);
+        });
+
         Route::post('/store',[UserExperienceController::class,'store']);
     });
-
-
 });
 
 //== AUTH ROUTE

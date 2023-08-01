@@ -77,9 +77,9 @@
                                 <path d="M12 9a1 1 0 01-1-1V3c0-.553.45-1.008.997-.93a7.004 7.004 0 015.933 5.933c.078.547-.378.997-.93.997h-5z" />
                                 <path d="M8.003 4.07C8.55 3.992 9 4.447 9 5v5a1 1 0 001 1h5c.552 0 1.008.45.93.997A7.001 7.001 0 012 11a7.002 7.002 0 016.003-6.93z" />
                             </svg>
-                            <h1 class="text-slate-500 font-bold ml-10">Total Expenses</h1>
+                            <h1 class="text-slate-500 font-bold ml-10">Total Month Expenses</h1>
                         </div>
-                        <h1 class="text-slate-500 font-bold text-sky-500">10000</h1>
+                        <h1 class="text-slate-500 font-bold text-sky-500">{{MonthlyExpenses}}</h1>
                     </div>
                 </div>
         </div>
@@ -208,6 +208,7 @@
                 UserExpenses:'',
                 ErrorMessage:'',
                 hasError:'',
+                MonthlyExpenses:'',
                 pieChart: {
                     pieChartLabels: [], // Labels for the pie chart slices
                     pieChartData: [],   // Data for the pie chart slices
@@ -230,6 +231,7 @@
             this.fetchExpenseType()
             this.fetchCurrentUserExpenses()
             this.fetchExpenseSummaryByExpenseType()
+            this.fetchMonthlyExpenses()
         },
         methods:{
             fetchCashtype(){
@@ -277,6 +279,7 @@
                        this.ErrorMessage.push(error.response.data.message)
                    })
             },
+
             fetchExpenseSummaryByExpenseType() {
                 this.pieChart.isLoading = true;
                 get('Summary/ExpenseType')
@@ -293,6 +296,17 @@
                         this.ErrorMessage.push(error.response.data.message);
                     })
                     .finally(() => this.pieChart.isLoading = false)
+            },
+
+            fetchMonthlyExpenses(){
+                get('UserExpense/getCurrentUserExpensesMonthly')
+                    .then(response => {
+                        this.MonthlyExpenses = response.data[0].MonthlyExpenses ? response.data[0].MonthlyExpenses : "0.00"
+                    })
+                    .catch(error => {
+                        this.hasError = true;
+                        this.ErrorMessage.push(error.response.data.message);
+                    })
             }
         }
     }

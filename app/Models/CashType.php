@@ -16,6 +16,7 @@ class CashType extends Model
         return $this->count() + 1;
     }
 
+
     public function store($request){
 
         return self::create([

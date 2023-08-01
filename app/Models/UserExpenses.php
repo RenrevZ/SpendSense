@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class UserExpenses extends Model
 {
@@ -26,6 +27,16 @@ class UserExpenses extends Model
                     ->with('ExpensesType','CashType')
                     ->get();
     }
+
+    public function fetchCurrentUserMonthlyExpenses($user){
+        return $this->selectRaw('SUM(AMOUNT) as MonthlyExpenses')
+            ->where([
+                'USER_ID' => $user,
+            ])
+            ->whereRaw('DATE(DATE_CREATED) = ?', [date('Y-m-d')])
+            ->get();
+    }
+
 
     public function store($request,$user){
 

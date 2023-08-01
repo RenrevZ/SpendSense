@@ -18,13 +18,20 @@ class SummaryPerCashType extends Model
         'AMOUNT'
     ];
 
-    public function findOne($expense){
+    public function findOne($expense) {
         return $this->where([
-                'CASH_TYPE_ID' => $expense->CASH_TYPE_ID,
-                'USER_ID' => $expense->USER_ID
-            ])
-            ->where(DB::raw('DATE(created_at)'), Carbon::now()->toDateString())
+            'CASH_TYPE_ID' => $expense->CASH_TYPE_ID,
+            'USER_ID' => $expense->USER_ID
+        ])
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
             ->first();
+    }
+
+    public function getCurrentUserExpenses($user){
+        return $this->where('USER_ID',$user)
+                    ->with('CashType')
+                    ->get();
     }
 
     public function store($expense){
