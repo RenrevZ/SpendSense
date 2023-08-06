@@ -46,12 +46,21 @@ class SummaryPerExpenseType extends Model
             ->update(['AMOUNT' => $currentItem->AMOUNT + $expense->AMOUNT]);
     }
 
-    public function getSummaryOfMonth()
+    public function getSummaryOfMonth($user)
     {
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
 
-        return $this->whereBetween('created_at', [$startOfMonth, $endOfMonth])->with('ExpensesType')->get();
+        return $this->where('USER_ID',$user)
+                    ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                    ->with('ExpensesType')
+                    ->get();
+    }
+
+    public function getCurrentUserExpenseType($user){
+        return $this->where('USER_ID',$user)
+                    ->with('ExpensesType')
+                    ->get();
     }
 
 

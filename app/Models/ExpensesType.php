@@ -27,6 +27,10 @@ class ExpensesType extends Model
         ]);
     }
 
+    public function findExpenseType($id){
+        return self::find($id);
+    }
+
     public function edit($id){
         return self::findOrFail($id);
     }

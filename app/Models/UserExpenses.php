@@ -12,11 +12,14 @@ class UserExpenses extends Model
     protected $primaryKey = 'EXPENSE_TYPE';
     protected $keyType = 'string';
     protected $table = 'user_expenses';
-    protected $fillable = ['EXPENSE_TYPE',
-                           'CASH_TYPE_ID',
-                           'EXPENSE_ID',
-                            'USER_ID',
-                            'AMOUNT'];
+    protected $fillable = [
+        'EXPENSE_TYPE',
+        'CASH_TYPE_ID',
+        'EXPENSE_ID',
+        'USER_ID',
+        'AMOUNT',
+        'DESCIPTION'
+    ];
 
     public function countModel(){
         return $this->count() + 1;
@@ -37,6 +40,24 @@ class UserExpenses extends Model
             ->get();
     }
 
+    public function getUserExpenseOnDate($data){
+        return $this->whereRaw('DATE(DATE_CREATED) = ?', [$data['DATE']])
+                    ->when(!empty($data['EXPENSE_ID']), function ($query) use ($data) {
+                        return $query->where('EXPENSE_ID', $data['EXPENSE_ID']);
+                    })
+                    ->with('ExpensesType','CashType')
+                    ->get();
+    }
+
+    public function getUserExpenseBasedOnSortedDate($data){
+        return $this->whereRaw('DATE(DATE_CREATED) = ?', [$data['DATE']])
+                    ->when(!empty($data['EXPENSE_ID']), function ($query) use ($data) {
+                        return $query->where('EXPENSE_ID', $data['EXPENSE_ID']);
+                    })
+                    ->with('ExpensesType','CashType')
+                    ->get();
+    }
+
 
     public function store($request,$user){
 
@@ -45,7 +66,8 @@ class UserExpenses extends Model
             'CASH_TYPE_ID' => $request->ExpendedType,
             'EXPENSE_ID' => $request->expenseType,
             'USER_ID' => $user->USER_ID,
-            'AMOUNT' => $request->Amount
+            'AMOUNT' => $request->Amount,
+            'DESCIPTION' => $request->description
         ]);
     }
 

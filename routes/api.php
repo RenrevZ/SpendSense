@@ -13,6 +13,7 @@ use \App\Http\Controllers\UserExperienceController;
 use \App\Models\UserExpenses;
 use \App\Models\SummaryPerExpenseType;
 use \App\Models\SummaryPerCashType;
+use \App\Http\Controllers\SummaryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,19 +69,18 @@ Route::group(['middleware' => ['auth:sanctum']],function (){
         });
 
         Route::post('/store',[UserExperienceController::class,'store']);
+        Route::post('/SortCurrentUserExpense',[UserExperienceController::class,'sort']);
+        Route::post('/getCurrentUserExpenseBaseOnDate',[UserExperienceController::class,'BaseDate']);
     });
 
     //=== GET SUMMARY OF ITEMS
     Route::prefix('Summary')->group(function () {
-        Route::get('/ExpenseType',function () {
-            return (new SummaryPerExpenseType)->getSummaryOfMonth();
-        });
-
-        Route::get('/UserExpenses',function (){
-            return (new SummaryPerCashType)->getCurrentUserExpenses(auth()->user()->USER_ID);
-        });
-
+        Route::get('/ExpenseType',[SummaryController::class,'getExpenseSummary']);
+        Route::get('/UserExpenses',[SummaryController::class,'getCurrentUserExpenses']);
+        Route::get('/UserExpensesPerExpenses',[SummaryController::class,'getUserExpensesPerExpenses']);
         Route::post('/store',[UserExperienceController::class,'store']);
+        Route::post('/UserExpensesSortedByDateAndExpense',[SummaryController::class,'getUserExpenseSortedByDate']);
+        Route::post('/UserExpensesSorted',[SummaryController::class,'getUserExpensesBySorted']);
     });
 });
 

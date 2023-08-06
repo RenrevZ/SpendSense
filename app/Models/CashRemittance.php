@@ -26,6 +26,14 @@ class CashRemittance extends Model
         ])->first();
     }
 
+    public function findUserRemittance($data){
+        return $this->where([
+            'USER_ID' => $data['USER_ID'],
+            'CASH_TYPE_ID' => $data['CASH_TYPE_ID'],
+        ])->first();
+    }
+
+
     public function deductUserExpense($request){
         $cashAmount = $this->findOne($request);
 

@@ -34,6 +34,15 @@ class SummaryPerCashType extends Model
                     ->get();
     }
 
+    public function getCurrentUserExpenseSortedByDate($data){
+        return $this->whereRaw('DATE(created_at) = ?', [$data['DATE']])
+                    ->when(!empty($data['EXPENSE_ID']), function ($query) use ($data) {
+                        return $query->where('EXPENSE_ID', $data['EXPENSE_ID']);
+                    })
+                   ->with('CashType')
+                   ->get();
+    }
+
     public function store($expense){
         return self::create([
             'CASH_TYPE_ID' => $expense->CASH_TYPE_ID,
